@@ -16,6 +16,8 @@
 #include <stdlib.h>
 #include "get_next_line.h"
 #include <dirent.h>
+#include <sys/wait.h>
+
 typedef struct	s_cmdexpr
 {
 	char *cmd;
@@ -90,21 +92,19 @@ t_cmdexpr *parse_subcmd(const char **line)
 		++d;
 	ret->cmd = ft_strsub(f, 0, d - f);
 	ret->args = ft_strsplitv(*line, ft_isspace);
+	while (*d)
+		++d;
 	*line = d;
 	return (ret);
 }
 
 t_bnode *parse_cmd(const char *line)
 {
-	const char *d;
 	t_bnode *ret;
 
 	ret = ftext_lstnew();
 	while (*line && ft_isspace(*line))
 		++line;
-	d = line;
-	while (*d && !ft_isspace(*d))
-		++d;
 	while (*line)
 		ftext_lstpush_back(ret, ftext_lstnewelemown(parse_subcmd(&line), 0));
 	return (ret);

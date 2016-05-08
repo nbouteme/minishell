@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 01:59:49 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/05/08 02:18:46 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/05/08 03:14:54 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,26 @@ int	builtin_exit(int ac, char **av)
 	return (0);
 }
 
+char *oldp;
+
 int	builtin_cd(int ac, char **av)
 {
-	(void)av;
-	(void)ac;
+/*	int f = has_l() << 1 | has_p();
+	char **comps;
+	const char *p;
+	if(ac == 1)
+	{
+		p = my_get_env("HOME");
+		if(!(p && ft_strlen(p)))
+			return (1);
+	}
+	else
+		p = av[1 + !!f];
+	comps = ft_strsplit(p, '/');
+	if(p[0] != '/')
+	{
+
+	}
 	return (0);
+*/
 }

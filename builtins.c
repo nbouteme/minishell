@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 01:59:49 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/17 04:15:01 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/17 04:45:29 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,14 +199,18 @@ int cd_step8()
 	tmp = arr;
 	while (*tmp)
 	{
-		if (ft_strcmp(*tmp, "") || ft_strcmp(*tmp, "."))
+		if (ft_strcmp(*tmp, "") == 0 || ft_strcmp(*tmp, ".") == 0)
+		{
+			++tmp;
 			continue ;
+		}
 		if (tmp != arr && (ft_strcmp(tmp[-1], "") || ft_strcmp(tmp[-1], "..")))
 		{
 			if (!check_components(arr, tmp - 1))
 				return 1;
 			*ft_strrchr(canon, '/') = 0;
 		}
+		++tmp;
 	}
 	return (cd_step9());
 }

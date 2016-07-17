@@ -6,11 +6,14 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 01:59:49 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/17 02:03:46 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/17 04:15:01 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
+
+char *empty_arr[] = {0};
+char *def_arr[] = {"printenv", 0};
 
 int	builtin_setenv(int ac, char **av)
 {
@@ -23,11 +26,53 @@ int	builtin_setenv(int ac, char **av)
 	return (1);
 }
 
+typedef struct	s_env_opts
+{
+	int empty;
+	char **env;
+	char *cmd;
+	char **args;
+}				t_env_opts;
+
+void parse_env_opts(char **av, t_env_opts *opts)
+{
+	extern char	**environ;
+
+	opts->empty = 0;
+	opts->cmd = 0;
+	opts->args = 0;
+	opts->env = l_dupenv(environ);
+	while (*av)
+	{
+		if (ft_strcmp(*av, "-") || ft_strcmp(*av, "-i"))
+		{
+			opts->empty = 1;
+			break ;
+		}
+		if (ft_strcmp(*av, "-u"))
+			l_my_delenv(opts->env, *(++av));
+		else if (ft_strchr(*av, '='))
+			l_my_setenv_kv(opts->env, *av);
+		else
+			break ;
+		++av;
+	}
+	opts->cmd = *av;
+	opts->args = opts->cmd ? av : def_arr;
+	opts->cmd = opts->cmd ? opts->cmd : def_arr[0];
+}
+
 int	builtin_env(int ac, char **av)
 {
-	(void)av;
+	t_env_opts opts;
+	t_cmdexpr cmd;
+
 	(void)ac;
-	print_env();
+	parse_env_opts(av + 1, &opts);
+	cmd.cmd = opts.cmd;
+	cmd.args = opts.args;
+	cmd.environ = opts.empty ? empty_arr : opts.env;
+	eval_from_path(&cmd);
 	return (1);
 }
 
@@ -67,6 +112,8 @@ int cd_step10();
 void parse_cd_opts(int ac, char **av, t_cd_opts *opts)
 {
 	(void)ac;
+	opts->physical = 0;
+	opts->dir_op = 0;
 	while(*(++av))
 	{
 		if(ft_strcmp(*av, "-P")

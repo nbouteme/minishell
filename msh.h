@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/27 00:31:16 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/05/08 02:25:10 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/17 03:52:18 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct	s_cmdexpr
 {
 	char		*cmd;
 	char		**args;
+	char		**environ;
 	int			r_flags;
 }				t_cmdexpr;
 
@@ -46,10 +47,18 @@ int				builtin_env(int ac, char **av);
 int				builtin_unsetenv(int ac, char **av);
 int				builtin_exit(int ac, char **av);
 int				builtin_cd(int ac, char **av);
+
 void			print_env();
 void			my_delenv(char *key);
 void			my_setenv(char *key, char *val);
-void			dupenv();
 const char		*my_get_env(const char *key);
+void			dupenv();
+
+void			l_print_env(char **env);
+void			l_my_delenv(char **env, char *key);
+void			l_my_setenv(char **env, char *key, char *val);
+void			l_my_setenv_kv(char **env, char *kv);
+const char		*l_my_get_env(char **env, const char *key);
+char			**l_dupenv(char **env);
 
 #endif

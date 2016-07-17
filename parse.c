@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 02:03:48 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/05/08 02:22:10 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/17 03:49:46 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 t_cmdexpr	*parse_subcmd(const char **line)
 {
+	extern char	**environ;
 	const char	*d;
 	const char	*f;
 	t_cmdexpr	*ret;
@@ -30,6 +31,7 @@ t_cmdexpr	*parse_subcmd(const char **line)
 	while (*d)
 		++d;
 	*line = d;
+	ret->environ = environ;
 	return (ret);
 }
 

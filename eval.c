@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 02:04:13 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/05/08 02:17:42 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/17 03:39:24 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	exec_stage2(t_cmdexpr *cmd, char *binpath)
 	if (fork())
 		wait(&cid);
 	else
-		execve(binpath, cmd->args, environ);
+		execve(binpath, cmd->args, cmd->environ);
 }
 
 void	execute_cmd(t_cmdexpr *cmd, char *dir)
@@ -51,7 +51,6 @@ void	execute_cmd(t_cmdexpr *cmd, char *dir)
 		exec_stage2(cmd, fullname);
 	else
 	{
-		ft_putstr("minishell: ");
 		ft_putstr(cmd->cmd);
 		ft_putstr(": Permission denied\n");
 	}

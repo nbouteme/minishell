@@ -6,15 +6,14 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 02:01:36 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/05/08 02:21:05 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/17 03:53:50 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-void		print_env(void)
+void		l_print_env(char **environ)
 {
-	extern char	**environ;
 	char		**e;
 
 	e = environ;
@@ -25,9 +24,8 @@ void		print_env(void)
 	}
 }
 
-void		my_delenv(char *key)
+void		l_my_delenv(char **environ, char *key)
 {
-	extern char	**environ;
 	char		**e;
 	t_u64		l;
 
@@ -49,11 +47,31 @@ void		my_delenv(char *key)
 			++e;
 }
 
-void		my_setenv(char *key, char *val)
+void		l_my_setenv_kv(char **environ, char *kv)
 {
-	extern char	**environ;
-	char		*tmp;
 	char		**e;
+	t_u64		l;
+
+	l = ft_strchr(kv, '=') - kv;
+	e = environ;
+	while (*e)
+		if (ft_strncmp(kv, *e, l) == 0 && e[0][l] == '=')
+		{
+			free(*e);
+			*e = kv;
+			return ;
+		}
+		else
+			++e;
+	l = e - environ;
+	e = ft_memcpy(ft_memalloc(8 * (l + 2)), environ, 8 * l);
+	e[l] = kv;
+	environ = e;
+}
+
+void		l_my_setenv(char **environ, char *key, char *val)
+{
+	char		*tmp;
 	t_u64		l;
 
 	l = ft_strlen(key);
@@ -61,25 +79,11 @@ void		my_setenv(char *key, char *val)
 	ft_strcat(tmp, key);
 	ft_strcat(tmp, "=");
 	ft_strcat(tmp, val);
-	e = environ;
-	while (*e)
-		if (ft_strncmp(key, *e, l) == 0 && e[0][l] == '=')
-		{
-			free(*e);
-			*e = tmp;
-			return ;
-		}
-		else
-			++e;
-	l = e - environ;
-	e = ft_memcpy(ft_memalloc(8 * (l + 2)), environ, 8 * l);
-	e[l] = tmp;
-	environ = e;
+	l_my_setenv_kv(environ, tmp);
 }
 
-const char	*my_get_env(const char *key)
+const char	*l_my_get_env(char **environ, const char *key)
 {
-	extern char	**environ;
 	char		**e;
 	t_u64		l;
 
@@ -93,9 +97,8 @@ const char	*my_get_env(const char *key)
 	return (0);
 }
 
-void		dupenv(void)
+char		**l_dupenv(char **environ)
 {
-	extern char **environ;
 	char		**newenv;
 	char		**e;
 	t_u64		l;
@@ -112,5 +115,5 @@ void		dupenv(void)
 		*e = ft_strdup(*e);
 		++e;
 	}
-	environ = newenv;
+	return (newenv);
 }

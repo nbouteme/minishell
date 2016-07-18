@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 02:04:13 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/18 01:35:24 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/19 00:59:09 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,9 @@ void	eval_from_path(t_cmdexpr *cmd)
 		ft_putstr(cmd->cmd);
 		ft_putstr(": Command not found\n");
 	}
-	while (*path)
-		free(*path++);
+	else
+		while (*path)
+			free(*path++);
 	free(tmp);
 }
 

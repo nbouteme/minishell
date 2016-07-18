@@ -6,11 +6,12 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/18 23:47:09 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/19 00:27:58 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/19 00:43:52 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
+#include <sys/param.h>
 
 extern char *g_curp;
 
@@ -51,9 +52,14 @@ int		cd_step7(t_cd_opts *opts)
 
 int		cd_step10(void)
 {
+	char *buf;
+
 	if (chdir(g_curp) != -1)
 	{
-		my_setenv("PWD", g_curp);
+		buf = ft_strnew(MAXPATHLEN);
+		getcwd(buf, MAXPATHLEN);
+		my_setenv("PWD", buf);
+		free(buf);
 		return (0);
 	}
 	run_cd_diag();

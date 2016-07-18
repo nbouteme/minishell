@@ -6,23 +6,11 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 02:01:36 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/17 03:53:50 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/19 00:03:17 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
-
-void		l_print_env(char **environ)
-{
-	char		**e;
-
-	e = environ;
-	while (*e)
-	{
-		ft_putendl(*e);
-		++e;
-	}
-}
 
 void		l_my_delenv(char **environ, char *key)
 {

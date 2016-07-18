@@ -6,13 +6,13 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/27 00:23:59 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/18 00:38:11 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/18 23:52:57 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-void free_arr(char **arr)
+void	free_arr(char **arr)
 {
 	char **tmp;
 
@@ -22,7 +22,7 @@ void free_arr(char **arr)
 	free(arr);
 }
 
-void free_cmd(void *data, size_t n)
+void	free_cmd(void *data, size_t n)
 {
 	t_cmdexpr	*cmd;
 
@@ -33,20 +33,20 @@ void free_cmd(void *data, size_t n)
 	free(cmd);
 }
 
-void free_globs()
+void	free_globs(void)
 {
-	extern char *curp;
-	extern char *oldp;
+	extern char *g_curp;
+	extern char *g_oldp;
 
-	free(curp);
-	free(oldp);
+	free(g_curp);
+	free(g_oldp);
 }
 
-int	main(void)
+int		main(void)
 {
-	extern char **environ;
-	char	*line;
-	t_bnode	*cmd;
+	extern char	**environ;
+	char		*line;
+	t_bnode		*cmd;
 
 	dupenv();
 	while (write(1, "$> ", 3) && get_next_line(0, &line) > 0)

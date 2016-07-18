@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/27 00:31:16 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/18 01:35:37 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/19 00:05:47 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,20 @@ typedef struct	s_cmdexpr
 	int			r_flags;
 }				t_cmdexpr;
 
+typedef struct	s_env_opts
+{
+	int		empty;
+	char	**env;
+	char	*cmd;
+	char	**args;
+}				t_env_opts;
+
+typedef struct	s_cd_opts
+{
+	int			physical;
+	char		*dir_op;
+}				t_cd_opts;
+
 typedef struct	s_builtin
 {
 	const char	*name;
@@ -48,12 +62,21 @@ int				builtin_unsetenv(int ac, char **av);
 int				builtin_exit(int ac, char **av);
 int				builtin_echo(int ac, char **av);
 int				builtin_cd(int ac, char **av);
+void			free_arr(char **arr);
+
+int				cd_step6(t_cd_opts *opts);
+int				cd_step5(t_cd_opts *opts);
+int				cd_step7(t_cd_opts *opts);
+int				cd_step8();
+int				cd_step10();
+int				cd_stage2(t_cd_opts *opts);
 
 void			print_env();
 void			my_delenv(char *key);
 void			my_setenv(char *key, char *val);
 const char		*my_get_env(const char *key);
 void			dupenv();
+void			run_cd_diag();
 
 void			l_print_env(char **env);
 void			l_my_delenv(char **env, char *key);

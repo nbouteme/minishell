@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 02:01:36 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/17 03:54:16 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/19 00:03:26 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,14 @@
 void		print_env(void)
 {
 	extern char	**environ;
+	char		**e;
 
-	return (l_print_env(environ));
+	e = environ;
+	while (*e)
+	{
+		ft_putendl(*e);
+		++e;
+	}
 }
 
 void		my_delenv(char *key)

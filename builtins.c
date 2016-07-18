@@ -6,11 +6,13 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 01:59:49 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/17 04:45:29 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/18 01:35:05 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
+#include <sys/stat.h>
+void free_arr(char **arr);
 
 char *empty_arr[] = {0};
 char *def_arr[] = {"printenv", 0};
@@ -44,12 +46,13 @@ void parse_env_opts(char **av, t_env_opts *opts)
 	opts->env = l_dupenv(environ);
 	while (*av)
 	{
-		if (ft_strcmp(*av, "-") || ft_strcmp(*av, "-i"))
+		if (ft_strcmp(*av, "-") == 0 || ft_strcmp(*av, "-i") == 0)
 		{
+			++av;
 			opts->empty = 1;
 			break ;
 		}
-		if (ft_strcmp(*av, "-u"))
+		if (ft_strcmp(*av, "-u") == 0)
 			l_my_delenv(opts->env, *(++av));
 		else if (ft_strchr(*av, '='))
 			l_my_setenv_kv(opts->env, *av);
@@ -73,6 +76,7 @@ int	builtin_env(int ac, char **av)
 	cmd.args = opts.args;
 	cmd.environ = opts.empty ? empty_arr : opts.env;
 	eval_from_path(&cmd);
+	free_arr(opts.env);
 	return (1);
 }
 
@@ -93,6 +97,19 @@ int	builtin_exit(int ac, char **av)
 	return (0);
 }
 
+int	builtin_echo(int ac, char **av)
+{
+	int i;
+
+	i = 1;
+	if (ac == 1)
+		ft_putchar(10);
+	else
+		while (i < ac)
+			ft_putendl(av[i++]);
+	return (0);
+}
+
 char *oldp = 0;
 char *curp = 0;
 
@@ -106,23 +123,29 @@ int cd_step6(t_cd_opts *opts);
 int cd_step5(t_cd_opts *opts);
 int cd_step7(t_cd_opts *opts);
 int cd_step8();
-int cd_step9();
 int cd_step10();
 
 void parse_cd_opts(int ac, char **av, t_cd_opts *opts)
 {
-	(void)ac;
 	opts->physical = 0;
 	opts->dir_op = 0;
-	while(*(++av))
+	while (*av)
 	{
-		if(ft_strcmp(*av, "-P")
+		if (ft_strcmp(*av, "-P")
 		   && ft_strcmp(*av, "-L"))
-			break;
+		{
+			ac = 0;
+			++av;
+			break ;
+		}
 		opts->physical = ft_strcmp(*av, "-P") ? 1 : 0;
 		opts->physical = ft_strcmp(*av, "-L") ? 0 : 1;
+		++av;
 	}
-	opts->dir_op = *(--av);
+	if (ac)
+		opts->dir_op = 0;
+	else
+		opts->dir_op = ft_strdup(*(--av));
 	if (!opts->dir_op ||
 		(ft_strcmp(*av, "-P") == 0 && ft_strcmp(*av, "-L") == 0))
 		opts->dir_op = ft_strdup(my_get_env("HOME"));
@@ -177,8 +200,11 @@ int cd_step7(t_cd_opts *opts)
 		else
 			tmp2 = ft_strdup(pwd);
 		tmp = ft_strjoin(tmp2, curp);
+		free(curp);
+		free(tmp2);
+		curp = tmp;
 	}
-	return (cd_step8());
+	return (cd_step10());
 }
 
 int check_components(char **start, char **end)
@@ -188,47 +214,24 @@ int check_components(char **start, char **end)
 	return 1;
 }
 
-int cd_step8()
-{
-	char *canon;
-	char **arr;
-	char **tmp;
 
-	canon = ft_strnew(256);
-	arr = ft_strsplit(curp, '/');
-	tmp = arr;
-	while (*tmp)
-	{
-		if (ft_strcmp(*tmp, "") == 0 || ft_strcmp(*tmp, ".") == 0)
-		{
-			++tmp;
-			continue ;
-		}
-		if (tmp != arr && (ft_strcmp(tmp[-1], "") || ft_strcmp(tmp[-1], "..")))
-		{
-			if (!check_components(arr, tmp - 1))
-				return 1;
-			*ft_strrchr(canon, '/') = 0;
-		}
-		++tmp;
-	}
-	return (cd_step9());
-}
-
-int cd_step9()
+int is_dir(const char *path)
 {
-	if (ft_strlen(curp) + 1 > 256 &&
-		my_get_env("PWD") != 0 &&
-		ft_strstr(curp, my_get_env("PWD")) == curp)
-	{
-		/* TODO: Reduire */
-	}
-	return (cd_step10());
+	struct stat s;
+
+	stat(path, &s);
+	return (S_ISDIR(s.st_mode));
 }
 
 void run_cd_diag()
 {
-	perror("cd");
+	ft_putstr("cd: ");
+	if (access(curp, F_OK) == -1)
+		ft_putstr("no such file or directory: ");
+	else if (!is_dir(curp))
+		ft_putstr("not a directory: ");
+	else if (access(curp, R_OK | X_OK) == -1)
+		ft_putstr("permission denied: ");
 	puts(curp);
 }
 
@@ -240,9 +243,23 @@ int cd_step10()
 	return (1);
 }
 
+int	cd_stage2(t_cd_opts *opts)
+{
+	if (opts->dir_op[0] == '/')
+	{
+		curp = ft_strdup(opts->dir_op);
+		return (cd_step7(opts));
+	}
+	else if (opts->dir_op[0] == '.')
+		return (cd_step6(opts));
+	return (cd_step5(opts));
+}
+
+
 int	builtin_cd(int ac, char **av)
 {
 	t_cd_opts opts;
+	int ret;
 
 	free(oldp);
 	oldp = curp;
@@ -250,12 +267,7 @@ int	builtin_cd(int ac, char **av)
 	parse_cd_opts(ac, av + 1, &opts);
 	if (!opts.dir_op)
 		return (1);
-	if (opts.dir_op[0] == '/')
-	{
-		curp = opts.dir_op;
-		return (cd_step7(&opts));
-	}
-	else if (opts.dir_op[0] == '.')
-		return (cd_step6(&opts));
-	return (cd_step5(&opts));
+	ret = cd_stage2(&opts);
+	free(opts.dir_op);
+	return (ret);
 }

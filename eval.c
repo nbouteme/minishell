@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 02:04:13 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/17 03:39:24 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/18 01:35:24 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 const t_builtin g_builtins[] =
 {
 	BUILTIN_DECL(cd),
+	BUILTIN_DECL(echo),
 	BUILTIN_DECL(setenv),
 	BUILTIN_DECL(env),
 	BUILTIN_DECL(unsetenv),
@@ -41,12 +42,12 @@ void	execute_cmd(t_cmdexpr *cmd, char *dir)
 	char	*fullname;
 	char	*r;
 
-	r = 0;
 	if (dir[ft_strlen(dir) - 1] != '/')
 		r = ft_strjoin(dir, "/");
 	else
 		r = ft_strdup(dir);
 	fullname = ft_strjoin(r, cmd->cmd);
+	free(r);
 	if (access(fullname, X_OK | R_OK) == 0)
 		exec_stage2(cmd, fullname);
 	else
@@ -54,6 +55,7 @@ void	execute_cmd(t_cmdexpr *cmd, char *dir)
 		ft_putstr(cmd->cmd);
 		ft_putstr(": Permission denied\n");
 	}
+	free(fullname);
 }
 
 int		eval_in_dir(t_cmdexpr *cmd, char *dir)
@@ -77,12 +79,15 @@ int		eval_in_dir(t_cmdexpr *cmd, char *dir)
 void	eval_from_path(t_cmdexpr *cmd)
 {
 	char		**path;
+	char		**tmp;
 	const char	*p;
 
 	path = 0;
+	tmp = 0;
 	if ((p = my_get_env("PATH")))
 	{
 		path = ft_strsplit(p, ':');
+		tmp = path;
 		while (*path && !eval_in_dir(cmd, *path))
 		{
 			free(*path);
@@ -91,10 +96,12 @@ void	eval_from_path(t_cmdexpr *cmd)
 	}
 	if (!path || !*path)
 	{
-		ft_putstr("minishell: ");
 		ft_putstr(cmd->cmd);
 		ft_putstr(": Command not found\n");
 	}
+	while (*path)
+		free(*path++);
+	free(tmp);
 }
 
 void	eval_cmd(t_dlist *elem)

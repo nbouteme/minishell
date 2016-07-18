@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/27 00:31:16 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/17 03:52:18 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/18 01:35:37 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ int				builtin_setenv(int ac, char **av);
 int				builtin_env(int ac, char **av);
 int				builtin_unsetenv(int ac, char **av);
 int				builtin_exit(int ac, char **av);
+int				builtin_echo(int ac, char **av);
 int				builtin_cd(int ac, char **av);
 
 void			print_env();

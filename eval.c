@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 02:04:13 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/21 02:43:33 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/21 04:26:54 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,15 @@ void	execute_cmd(t_cmdexpr *cmd, char *dir)
 		ft_putstr(cmd->cmd);
 		ft_putstr(": is a directory\n");
 	}
+	else if (access(fullname, X_OK | R_OK) == 0)
+		exec_stage2(cmd, fullname);
 	else
-		if (access(fullname, X_OK | R_OK) == 0)
-			exec_stage2(cmd, fullname);
-		else
-		{
-			ft_putstr(cmd->cmd);
-			ft_putstr(": Permission denied\n");
-		}
+	{
+		ft_putstr(cmd->cmd);
+		ft_putstr((access(fullname, F_OK) == 0) ?
+				": Permission denied\n" :
+				": no such file or directory\n");
+	}
 	free(fullname);
 }
 

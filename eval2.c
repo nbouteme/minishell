@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/21 01:30:18 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/21 02:45:31 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/21 04:25:23 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	eval_from_current(t_cmdexpr *cmd)
 {
-	int error;
-	char *last_com;
-	char *name;
+	int		error;
+	char	*last_com;
+	char	*name;
 
 	last_com = 0;
 	error = 0;

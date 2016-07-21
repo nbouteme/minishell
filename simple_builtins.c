@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/07/18 23:43:49 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/21 01:20:39 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/21 04:27:08 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	builtin_setenv(int ac, char **av)
 {
 	extern char **environ;
+
 	if (ac <= 1)
 		l_print_env(environ);
 	else if (ac == 2)

@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 01:59:49 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/21 01:41:37 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/21 04:27:41 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,7 @@ void	parse_env_opts(char **av, t_env_opts *opts)
 {
 	extern char	**environ;
 
-	opts->empty = 0;
-	opts->cmd = 0;
-	opts->args = 0;
+	ft_memset(opts, 0, sizeof(*opts));
 	opts->env = l_dupenv(environ);
 	while (*av)
 	{
@@ -42,7 +40,8 @@ void	parse_env_opts(char **av, t_env_opts *opts)
 		++av;
 	}
 	opts->cmd = *av;
-	opts->args = opts->cmd ? av : ft_memcpy(malloc(sizeof(g_def_arr)), g_def_arr, sizeof(g_def_arr));
+	opts->args = opts->cmd ? av : ft_memcpy(malloc(sizeof(g_def_arr)),
+											g_def_arr, sizeof(g_def_arr));
 	opts->cmd = opts->cmd ? opts->cmd : g_def_arr[0];
 }
 

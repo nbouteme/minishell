@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 02:04:13 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/19 00:59:09 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/21 02:43:33 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ const t_builtin g_builtins[] =
 	BUILTIN_DECL(echo),
 	BUILTIN_DECL(setenv),
 	BUILTIN_DECL(env),
+	BUILTIN_DECL(printenv),
 	BUILTIN_DECL(unsetenv),
 	BUILTIN_DECL(exit)
 };
@@ -42,19 +43,25 @@ void	execute_cmd(t_cmdexpr *cmd, char *dir)
 	char	*fullname;
 	char	*r;
 
-	if (dir[ft_strlen(dir) - 1] != '/')
+	if (dir && dir[ft_strlen(dir) - 1] != '/')
 		r = ft_strjoin(dir, "/");
 	else
-		r = ft_strdup(dir);
+		r = ft_strdup(dir ? dir : "");
 	fullname = ft_strjoin(r, cmd->cmd);
 	free(r);
-	if (access(fullname, X_OK | R_OK) == 0)
-		exec_stage2(cmd, fullname);
-	else
+	if (is_dir(fullname))
 	{
 		ft_putstr(cmd->cmd);
-		ft_putstr(": Permission denied\n");
+		ft_putstr(": is a directory\n");
 	}
+	else
+		if (access(fullname, X_OK | R_OK) == 0)
+			exec_stage2(cmd, fullname);
+		else
+		{
+			ft_putstr(cmd->cmd);
+			ft_putstr(": Permission denied\n");
+		}
 	free(fullname);
 }
 
@@ -122,5 +129,6 @@ void	eval_cmd(t_dlist *elem)
 			g_builtins[i].fun(j, cmd->args);
 			return ;
 		}
-	eval_from_path(cmd);
+	if (!eval_from_current(cmd))
+		eval_from_path(cmd);
 }

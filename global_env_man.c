@@ -6,23 +6,17 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 02:01:36 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/19 00:03:26 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/21 01:13:25 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "msh.h"
 
-void		print_env(void)
+void		my_setenv_kv(char *kv)
 {
 	extern char	**environ;
-	char		**e;
 
-	e = environ;
-	while (*e)
-	{
-		ft_putendl(*e);
-		++e;
-	}
+	return (l_my_setenv_kv(environ, kv));
 }
 
 void		my_delenv(char *key)

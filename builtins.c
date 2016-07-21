@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 01:59:49 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/18 23:57:39 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/21 01:41:37 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,21 +42,25 @@ void	parse_env_opts(char **av, t_env_opts *opts)
 		++av;
 	}
 	opts->cmd = *av;
-	opts->args = opts->cmd ? av : g_def_arr;
+	opts->args = opts->cmd ? av : ft_memcpy(malloc(sizeof(g_def_arr)), g_def_arr, sizeof(g_def_arr));
 	opts->cmd = opts->cmd ? opts->cmd : g_def_arr[0];
 }
 
 int		builtin_env(int ac, char **av)
 {
+	extern char	**environ;
 	t_env_opts	opts;
 	t_cmdexpr	cmd;
+	t_dlist		*elem;
 
 	(void)ac;
 	parse_env_opts(av + 1, &opts);
 	cmd.cmd = opts.cmd;
 	cmd.args = opts.args;
 	cmd.environ = opts.empty ? g_empty_arr : opts.env;
-	eval_from_path(&cmd);
+	elem = ftext_lstnewelem(&cmd, sizeof(cmd));
+	eval_cmd(elem);
+	free(elem);
 	free_arr(opts.env);
 	return (1);
 }
@@ -84,7 +88,7 @@ void	parse_cd_opts(int ac, char **av, t_cd_opts *opts)
 		opts->dir_op = ft_strdup(*(--av));
 	if (!opts->dir_op ||
 		(ft_strcmp(*av, "-P") == 0 && ft_strcmp(*av, "-L") == 0))
-		opts->dir_op = ft_strdup(my_get_env("HOME"));
+		opts->dir_op = my_get_env("HOME") ? ft_strdup(my_get_env("HOME")) : 0;
 }
 
 int		builtin_cd(int ac, char **av)

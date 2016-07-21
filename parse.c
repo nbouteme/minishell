@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 02:03:48 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/17 03:49:46 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/21 01:22:57 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,10 @@ t_bnode		*parse_cmd(const char *line)
 	while (*line)
 		ftext_lstpush_back(ret, ftext_lstnewelemown(parse_subcmd(&line), 0));
 	return (ret);
+}
+
+void l_print_env(char **env)
+{
+	while (*env)
+		ft_putendl(*env++);
 }

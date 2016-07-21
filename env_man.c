@@ -6,7 +6,7 @@
 /*   By: nbouteme <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/08 02:01:36 by nbouteme          #+#    #+#             */
-/*   Updated: 2016/07/19 00:03:17 by nbouteme         ###   ########.fr       */
+/*   Updated: 2016/07/21 01:27:50 by nbouteme         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void		l_my_setenv_kv(char **environ, char *kv)
 		if (ft_strncmp(kv, *e, l) == 0 && e[0][l] == '=')
 		{
 			free(*e);
-			*e = kv;
+			*e = ft_strdup(kv);
 			return ;
 		}
 		else
